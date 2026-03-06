@@ -1,0 +1,558 @@
+/* =============================================
+   GREENVELOPE – LUSH BLOSSOMS – FULL CLONE
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@300;400&display=swap');
+
+/* ---------- tokens ---------- */
+:root {
+    --cream: #f5eedc;
+    --cream-dk: #ede3c8;
+    --flap: #f0e7d2;
+    --white: #ffffff;
+    --seal-hi: #f0cfd1;
+    --seal: #dfb2b5;
+    --seal-dk: #c89295;
+    --gold: #c49959;
+    --txt: #3d3229;
+    --txt-md: #6e5e50;
+    --txt-lt: #9a8a7c;
+    --bg: #f7f3ee;
+    --bg2: #ece5d8;
+    --env-w: 520px;
+    --env-h: 360px;
+    --card-w: 440px;
+    --card-h: 620px;
+}
+
+/* ---------- reset ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden
+}
+
+body {
+    font-family: 'Josefin Sans', 'Montserrat', sans-serif;
+    background: linear-gradient(180deg, var(--bg), var(--bg2));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- stage ---------- */
+#stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1800px;
+}
+
+/* ============================================================
+   ENVELOPE SCENE
+   ============================================================ */
+#envelope-scene {
+    position: absolute;
+    width: var(--env-w);
+    height: var(--env-h);
+    perspective: 1800px;
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+#envelope-scene.gone {
+    opacity: 0;
+    transform: scale(.65) translateY(100px);
+    pointer-events: none;
+}
+
+/* ---------- envelope (two-face flip) ---------- */
+.envelope {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 1.4s cubic-bezier(.4, 0, .2, 1);
+    transform: rotateY(180deg);
+    /* start showing BACK */
+}
+
+.envelope.flipped {
+    transform: rotateY(0deg)
+}
+
+/* ---------- faces common ---------- */
+.face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .12), 0 8px 20px rgba(0, 0, 0, .08);
+}
+
+/* ---- BACK face (address) ---- */
+.face.back {
+    background: var(--cream);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.back-content {
+    text-align: center;
+    z-index: 2
+}
+
+.back-to {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--txt-lt);
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+
+.back-name {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--txt);
+}
+
+/* ---- FRONT face (flap side) ---- */
+.face.front {
+    background: var(--cream);
+    overflow: visible;
+}
+
+/* throat liner */
+.throat-liner {
+    position: absolute;
+    inset: 0;
+    background: url('liner.png') center/cover no-repeat;
+    border-radius: 6px;
+    opacity: .85;
+    z-index: 1;
+}
+
+/* side + bottom flaps */
+.env-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none
+}
+
+.env-left {
+    background: linear-gradient(to right, var(--cream) 30%, transparent 52%);
+    clip-path: polygon(0 0, 50% 50%, 0 100%);
+    z-index: 4;
+}
+
+.env-right {
+    background: linear-gradient(to left, var(--cream) 30%, transparent 52%);
+    clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+    z-index: 4;
+}
+
+.env-bottom {
+    background: var(--cream);
+    clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+    z-index: 10;
+    /* Base for the pocket */
+}
+
+/* top flap (opens) */
+.env-top {
+    width: 100%;
+    height: 52%;
+    top: 0;
+    left: 0;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    transition: transform 1.5s cubic-bezier(.4, 0, .2, 1);
+    z-index: 15;
+    /* Base layer for opening, card will jump ahead */
+}
+
+.env-top.opened {
+    transform: rotateX(180deg)
+}
+
+.flap-outside,
+.flap-inside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.flap-outside {
+    background: linear-gradient(to bottom, var(--flap) 30%, var(--cream-dk));
+    z-index: 2;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.flap-inside {
+    transform: rotateX(180deg);
+    background: #fff;
+    overflow: hidden;
+    z-index: 1;
+    clip-path: polygon(0 100%, 100% 100%, 50% 0);
+}
+
+.flap-liner {
+    position: absolute;
+    inset: 0;
+    background: url('liner.png') center/cover no-repeat;
+    opacity: .85;
+}
+
+/* wax seal */
+.seal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    z-index: 50;
+    /* Topmost element before opening */
+    cursor: pointer;
+    transition: transform .3s ease, opacity .5s ease;
+    background: url('seal.png') center/contain no-repeat;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .3));
+}
+
+.seal:hover {
+    transform: translate(-50%, -52%) scale(1.1)
+}
+
+.seal.gone {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -60%) scale(.6)
+}
+
+/* prompt */
+.prompt {
+    position: absolute;
+    bottom: -40px;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--txt-lt);
+    opacity: 0;
+    transition: opacity .3s ease;
+    z-index: 5;
+    /* Keep below paper (100) and flares */
+}
+
+.prompt.show {
+    opacity: 1
+}
+
+/* ============================================================
+   CARD SCENE (fills viewport once revealed)
+   ============================================================ */
+#card-scene {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease;
+}
+
+#card-scene.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--card-w);
+    height: var(--card-h);
+    background: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, .18), 0 15px 40px rgba(0, 0, 0, .08);
+    z-index: 2;
+    /* Behind the flaps */
+    overflow: hidden;
+    /* initial state: nested in pocket, centered vertically so it doesn't poke out */
+    transform: translate(-50%, -50%) rotateZ(-90deg) scale(.5);
+    opacity: 0;
+    z-index: 2;
+    /* behind the small flaps (10) */
+    transition: opacity 0.5s ease;
+}
+
+/* When the card is triggered to show */
+.card.show {
+    animation: cardOut 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes cardOut {
+
+    0%,
+    25% {
+        /* Hold position briefly inside the pocket */
+        transform: translate(-50%, -50%) rotateZ(-90deg) scale(.5);
+        z-index: 2;
+        opacity: 1;
+    }
+
+    30% {
+        /* Immediately jump in front of the triangle flap as it starts moving */
+        z-index: 100;
+        opacity: 1;
+    }
+
+    60% {
+        /* slides vertically out - clearly in front of the flaps */
+        transform: translate(-50%, -150%) rotateZ(-90deg) scale(.75);
+        z-index: 100;
+        opacity: 1;
+    }
+
+    100% {
+        /* finished state - centered and on top */
+        transform: translate(-50%, -50%) rotateZ(0deg) scale(1);
+        z-index: 100;
+        opacity: 1;
+    }
+}
+
+/* helper class to fade out envelope components once card is out */
+.hiding-envelope .face.back,
+.hiding-envelope .throat-liner,
+.hiding-envelope .env-flap,
+.hiding-envelope .seal {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+}
+
+.hiding-envelope #envelope {
+    box-shadow: none;
+    transition: box-shadow 0.8s ease;
+}
+
+/* floral background covering full card */
+.card-bg {
+    position: absolute;
+    inset: 0;
+    background: url('card-bg.png') center/cover no-repeat;
+    opacity: .92;
+    z-index: 1;
+}
+
+/* text layer */
+.card-body {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px 60px;
+}
+
+.line1,
+.rsvp {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--txt-lt);
+    font-weight: 400;
+}
+
+.line1 {
+    margin-bottom: 22px
+}
+
+.names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--txt);
+    line-height: 1.25;
+    margin-bottom: 16px;
+}
+
+.amp {
+    display: block;
+    font-family: 'Great Vibes', cursive;
+    font-size: 46px;
+    color: var(--gold);
+    line-height: 1.1;
+}
+
+.line2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--txt-md);
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+
+hr.divider {
+    border: none;
+    width: 36px;
+    height: 1px;
+    background: var(--gold);
+    opacity: .45;
+    margin: 14px auto;
+}
+
+hr.divider.sm {
+    width: 20px;
+    margin: 10px auto
+}
+
+.date {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--txt);
+    margin-bottom: 3px;
+}
+
+.year,
+.time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--txt-md);
+}
+
+.time {
+    font-style: italic
+}
+
+.venue {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    color: var(--txt);
+    margin-bottom: 2px;
+}
+
+.addr {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--txt-md);
+}
+
+.rsvp {
+    margin-top: 22px
+}
+
+/* ============================================================
+   REPLAY
+   ============================================================ */
+#replay {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--txt-md);
+    background: rgba(255, 255, 255, .65);
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 30px;
+    padding: 10px 28px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all .3s ease;
+    z-index: 60;
+}
+
+#replay:hover {
+    background: var(--txt);
+    color: var(--white);
+    border-color: var(--txt)
+}
+
+#replay.show {
+    opacity: 1;
+    pointer-events: auto
+}
+
+/* confetti canvas */
+#confetti-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 200;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:560px) {
+    :root {
+        --env-w: 92vw;
+        --env-h: 64vw;
+        --card-w: 92vw;
+        --card-h: 130vw
+    }
+
+    .names {
+        font-size: 30px
+    }
+
+    .card-body {
+        padding: 30px 25px
+    }
+}

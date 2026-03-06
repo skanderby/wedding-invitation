@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Invited!</title>
+    <meta name="description" content="Wedding Invitation">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Full viewport stage -->
+    <div id="stage">
+
+        <!-- ======================== -->
+        <!--  PHASE 1: ENVELOPE      -->
+        <!-- ======================== -->
+        <div id="envelope-scene">
+            <div id="envelope" class="envelope">
+
+                <!-- BACK FACE (shown first — address side) -->
+                <div class="face back">
+                    <div class="back-content">
+                        <span class="back-to">To</span>
+                        <span class="back-name">Our Beloved Guest</span>
+                    </div>
+                </div>
+
+                <!-- FRONT FACE (shown after flip) -->
+                <div class="face front">
+                    <!-- liner visible inside throat -->
+                    <div class="throat-liner"></div>
+
+                    <!-- CARD (hidden inside) -->
+                    <div class="card" id="card">
+                        <div class="card-bg"></div>
+                        <div class="card-body">
+                            <p class="line1">Together with their families</p>
+                            <h1 class="names">Skander<span class="amp">&amp;</span>Future Bride</h1>
+                            <p class="line2">request the pleasure of your company<br>at their wedding celebration</p>
+                            <hr class="divider">
+                            <p class="date">Saturday, the Fifteenth of August</p>
+                            <p class="year">Two Thousand and Twenty Six</p>
+                            <p class="time">at five o'clock in the evening</p>
+                            <hr class="divider sm">
+                            <p class="venue">The Beautiful Green Gardens</p>
+                            <p class="addr">City, Country</p>
+                            <p class="rsvp">Reception to follow</p>
+                        </div>
+                    </div>
+
+                    <!-- flaps that form the envelope shape -->
+                    <div class="env-flap env-left"></div>
+                    <div class="env-flap env-right"></div>
+                    <div class="env-flap env-bottom"></div>
+
+                    <!-- top triangle flap — opens -->
+                    <div class="env-flap env-top" id="flap">
+                        <div class="flap-outside"></div>
+                        <div class="flap-inside">
+                            <div class="flap-liner"></div>
+                        </div>
+                    </div>
+
+                    <!-- wax seal -->
+                    <div class="seal" id="seal"></div>
+                </div>
+            </div>
+
+            <!-- prompt text below envelope -->
+            <p class="prompt" id="prompt"></p>
+        </div>
+
+        <!-- ======================== -->
+        <!--  PHASE 2: CARD          -->
+        <!-- ======================== -->
+        <!-- Card-scene is now just a container for the transition state if needed, 
+             but we've moved the card inside the envelope for the 'inside' effect. -->
+        <div id="card-scene"></div>
+
+        <!-- Replay -->
+        <button id="replay">↻ Replay</button>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
