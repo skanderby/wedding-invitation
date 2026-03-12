@@ -46,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }), 400);
     };
 
+    /* hide seal on phase A — mobile browsers sometimes ignore backface-visibility */
+    seal.style.opacity = '0';
+    seal.style.pointerEvents = 'none';
+
     /* ---------- step A: show prompt ---------- */
     const initA = () => {
         prompt.textContent = 'Click to turn over';
@@ -62,6 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
         envelope.classList.add('flipped');
 
         await wait(1500);
+
+        /* reveal seal now that front face is showing */
+        seal.style.opacity = '1';
+        seal.style.pointerEvents = 'auto';
+
         prompt.textContent = 'Click the seal to open';
         prompt.classList.add('show');
     });
@@ -108,6 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // reset envelope
         envelopeScene.classList.remove('gone');
         seal.classList.remove('gone');
+        seal.style.opacity = '0';
+        seal.style.pointerEvents = 'none';
         flap.classList.remove('opened');
 
         await wait(400);
