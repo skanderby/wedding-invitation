@@ -69,6 +69,7 @@ body {
     height: var(--env-h);
     perspective: 1800px;
     transition: opacity .8s ease, transform .8s ease;
+    cursor: pointer;
 }
 
 #envelope-scene.gone {
@@ -103,6 +104,7 @@ body {
     -webkit-backface-visibility: hidden;
     border-radius: 6px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, .12), 0 8px 20px rgba(0, 0, 0, .08);
+    pointer-events: none;
 }
 
 /* ---- BACK face (address) ---- */
@@ -181,8 +183,7 @@ body {
 .env-bottom {
     background: var(--cream);
     clip-path: polygon(0 100%, 50% 50%, 100% 100%);
-    z-index: 10;
-    /* Base for the pocket */
+    z-index: 5;
 }
 
 /* top flap (opens) */
@@ -193,9 +194,8 @@ body {
     left: 0;
     transform-origin: top center;
     transform-style: preserve-3d;
-    transition: transform 1.5s cubic-bezier(.4, 0, .2, 1);
-    z-index: 15;
-    /* Base layer for opening, card will jump ahead */
+    transition: transform 1s cubic-bezier(.4, 0, .2, 1);
+    z-index: 8;
 }
 
 .env-top.opened {
@@ -242,9 +242,9 @@ body {
     transform: translate(-50%, -50%);
     width: 80px;
     height: 80px;
-    z-index: 50;
-    /* Topmost element before opening */
+    z-index: 9;
     cursor: pointer;
+    pointer-events: auto;
     transition: transform .3s ease, opacity .5s ease;
     background: url('seal.png') center/contain no-repeat;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .3));
@@ -271,9 +271,7 @@ body {
     text-transform: uppercase;
     color: var(--txt-lt);
     opacity: 0;
-    transition: opacity .3s ease;
-    z-index: 5;
-    /* Keep below paper (100) and flares */
+    transition: opacity .5s ease;
 }
 
 .prompt.show {
@@ -297,90 +295,44 @@ body {
 
 #card-scene.show {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: auto
 }
 
 .card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
     width: var(--card-w);
     height: var(--card-h);
-    background: var(--white);
-    border-radius: 6px;
+    background: url('floral-left.png') center/cover no-repeat;
+    border-radius: 32px;
     box-shadow: 0 40px 100px rgba(0, 0, 0, .18), 0 15px 40px rgba(0, 0, 0, .08);
-    z-index: 2;
-    /* Behind the flaps */
+    position: relative;
     overflow: hidden;
-    /* initial state: nested in pocket, centered vertically so it doesn't poke out */
-    transform: translate(-50%, -50%) rotateZ(-90deg) scale(.5);
-    opacity: 0;
-    z-index: 2;
-    /* behind the small flaps (10) */
-    transition: opacity 0.5s ease;
+    /* entrance: start low and scaled down to look like it's inside the envelope */
+    transform: translateY(220px) rotateZ(-90deg) scale(.65);
 }
 
-/* When the card is triggered to show */
-.card.show {
-    animation: cardOut 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+#card-scene.show .card {
+    animation: cardOut 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes cardOut {
-
-    0%,
-    25% {
-        /* Hold position briefly inside the pocket */
-        transform: translate(-50%, -50%) rotateZ(-90deg) scale(.5);
-        z-index: 2;
-        opacity: 1;
+    0% {
+        transform: translateY(220px) rotateZ(-90deg) scale(.65);
     }
 
-    30% {
-        /* Immediately jump in front of the triangle flap as it starts moving */
-        z-index: 100;
-        opacity: 1;
-    }
-
-    60% {
-        /* slides vertically out - clearly in front of the flaps */
-        transform: translate(-50%, -150%) rotateZ(-90deg) scale(.75);
-        z-index: 100;
-        opacity: 1;
+    45% {
+        /* slides vertically out of the envelope first */
+        transform: translateY(-150px) rotateZ(-90deg) scale(.75);
     }
 
     100% {
-        /* finished state - centered and on top */
-        transform: translate(-50%, -50%) rotateZ(0deg) scale(1);
-        z-index: 100;
-        opacity: 1;
+        /* then rotates 90 degrees to face the user and centers */
+        transform: translateY(0) rotateZ(0deg) scale(1);
     }
 }
 
-/* helper class to fade out envelope components once card is out */
-.hiding-envelope .face.back,
-.hiding-envelope .throat-liner,
-.hiding-envelope .env-flap,
-.hiding-envelope .seal {
-    opacity: 0;
-    transition: opacity 0.8s ease;
-    pointer-events: none;
-}
 
-.hiding-envelope #envelope {
-    box-shadow: none;
-    transition: box-shadow 0.8s ease;
-}
 
-/* floral background covering full card */
-.card-bg {
-    position: absolute;
-    inset: 0;
-    background: url('card-bg.png') center/cover no-repeat;
-    opacity: .92;
-    z-index: 1;
-}
-
-/* text layer */
+/* text layer — shifted to the right of the floral */
 .card-body {
     position: relative;
     z-index: 2;
@@ -391,7 +343,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 50px 60px;
+    padding: 40px 36px 40px 44%;
 }
 
 .line1,
@@ -422,7 +374,8 @@ body {
     font-family: 'Great Vibes', cursive;
     font-size: 46px;
     color: var(--gold);
-    line-height: 1.1;
+    line-height: 1;
+    padding: 10px 0 0 0;
 }
 
 .line2 {

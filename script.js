@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seal = document.getElementById('seal');
     const prompt = document.getElementById('prompt');
     const envelopeScene = document.getElementById('envelope-scene');
-    const card = document.getElementById('card');
+    const cardScene = document.getElementById('card-scene');
     const replayBtn = document.getElementById('replay');
     const canvas = document.getElementById('confetti-canvas');
 
@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     initA();
 
-    /* ---------- click envelope (step A → B) ---------- */
-    envelope.addEventListener('click', async () => {
+    /* ---------- click envelope back face (step A → B) ---------- */
+    envelopeScene.addEventListener('click', async () => {
         if (phase !== 'A') return;
         phase = 'B';
 
@@ -68,13 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---------- click seal (step B → C → D) ---------- */
     seal.addEventListener('click', async e => {
-        e.stopPropagation();
         if (phase !== 'B') return;
         phase = 'C';
 
-        // Instantly hide prompt to avoid overlap
         prompt.classList.remove('show');
-        prompt.style.pointerEvents = 'none';
 
         // 1. hide seal
         seal.classList.add('gone');
@@ -82,17 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. open flap
         flap.classList.add('opened');
 
-        // Show card in pocket (it starts its keyframe animation but holds in-pocket for 25% of the 3.5s)
+        await wait(800);
+
+        // 3. show card scene (it starts sliding up from deep inside)
         phase = 'D';
-        card.classList.add('show');
+        cardScene.classList.add('show');
 
-        // wait for the pocket-hold and initial reveal
-        await wait(2500);
+        // wait just a bit as it starts to appear, then sink envelope
+        await wait(150);
 
-        // 4. start fading the envelope
-        envelopeScene.classList.add('hiding-envelope');
+        // 4. hide the whole envelope scene giving a 3D effect of card jumping out
+        envelopeScene.classList.add('gone');
 
-        await wait(2000);
+        await wait(800);
         boom();
 
         await wait(800);
@@ -102,10 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ---------- replay ---------- */
     replayBtn.addEventListener('click', async () => {
         replayBtn.classList.remove('show');
-        // reset envelope and card
-        envelopeScene.classList.remove('hiding-envelope');
+        cardScene.classList.remove('show');
+
+        await wait(600);
+
+        // reset envelope
         envelopeScene.classList.remove('gone');
-        card.classList.remove('show');
         seal.classList.remove('gone');
         flap.classList.remove('opened');
 
