@@ -493,74 +493,19 @@ hr.divider.sm {
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-
-/* --- tablet / large phone --- */
-@media (max-width: 560px) {
+@media(max-width:560px) {
     :root {
         --env-w: 92vw;
         --env-h: 64vw;
-        --card-w: 88vw;
-        --card-h: 136vw;
-    }
-
-    .back-name {
-        font-size: 22px;
-    }
-
-    /* keep left padding so text clears the flowers */
-    .card-body {
-        padding: 24px 16px 24px 42%;
+        --card-w: 92vw;
+        --card-h: 130vw
     }
 
     .names {
-        font-size: 26px;
-    }
-
-    .amp {
-        font-size: 36px;
-    }
-
-    .seal {
-        width: 60px;
-        height: 60px;
-    }
-}
-
-/* --- small phones (< 400px) --- */
-@media (max-width: 400px) {
-    :root {
-        --card-w: 95vw;
-        --card-h: 148vw;
-        --env-w: 95vw;
-        --env-h: 68vw;
-    }
-
-    /* on very small screens: stack flowers top, text below */
-    .card {
-        background-position: left top;
-        background-size: auto 50%;
+        font-size: 30px
     }
 
     .card-body {
-        padding: 52% 20px 20px 20px;
-        /* push text below flower area */
-        justify-content: flex-start;
-        align-items: center;
-        text-align: center;
-    }
-
-    .names {
-        font-size: 22px;
-    }
-
-    .amp {
-        font-size: 30px;
-    }
-
-    .line2,
-    .addr,
-    .year,
-    .time {
-        font-size: 12px;
+        padding: 30px 25px
     }
 }
